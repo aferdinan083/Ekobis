@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyEkon — Asisten Mahasiswa Ekonomi</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-deep:   #1a4fd6;
+  --blue-mid:    #2563eb;
+  --blue-soft:   #3b82f6;
+  --blue-light:  #dbeafe;
+  --blue-pale:   #eff6ff;
+  --white:       #ffffff;
+  --gray-100:    #f1f5f9;
+  --gray-200:    #e2e8f0;
+  --gray-400:    #94a3b8;
+  --gray-600:    #475569;
+  --gray-900:    #0f172a;
+  --success:     #10b981;
+  --warning:     #f59e0b;
+  --danger:      #ef4444;
+  --shadow-sm:   0 1px 3px rgba(37,99,235,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:   0 4px 16px rgba(37,99,235,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-lg:   0 12px 40px rgba(37,99,235,0.16), 0 4px 12px rgba(0,0,0,0.08);
+  --radius:      16px;
+  --radius-sm:   10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--gray-100);
+  color: var(--gray-900);
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR LAYOUT ── */
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 240px;
+  background: var(--white);
+  border-right: 1px solid var(--gray-200);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 50;
+  transition: transform 0.3s;
+}
+
+.sidebar-logo {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--blue-mid), var(--blue-soft));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+}
+
+.logo-text {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: -0.3px;
+}
+
+.logo-text span { color: var(--blue-mid); }
+
+.logo-sub {
+  font-size: 0.7rem;
+  color: var(--gray-400);
+  margin-top: 0.2rem;
+  font-weight: 500;
+}
+
+.nav-section {
+  padding: 1rem 0.75rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray-400);
+  padding: 0 0.75rem;
+  margin-bottom: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+.nav-item:hover { background: var(--blue-pale); color: var(--blue-mid); }
+.nav-item.active { background: var(--blue-light); color: var(--blue-deep); font-weight: 600; }
+.nav-item .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--gray-200);
+  font-size: 0.72rem;
+  color: var(--gray-400);
+  line-height: 1.5;
+}
+
+/* ── MAIN CONTENT ── */
+.content {
+  margin-left: 240px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbar-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.topbar-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--blue-pale);
+  color: var(--blue-mid);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid var(--blue-light);
+}
+
+.page-body { padding: 2rem; flex: 1; }
+.page { display: none; }
+.page.active { display: block; animation: fadeUp 0.25s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-pad { padding: 1.5rem; }
+
+/* ── HOME ── */
+.hero-banner {
+  background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-soft) 100%);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  color: white;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 280px; height: 280px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: 120px;
+  width: 180px; height: 180px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 50%;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+
+.hero-banner h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2.2rem;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+
+.hero-banner p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  max-width: 480px;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+}
+
+.hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+.btn-primary {
+  background: white;
+  color: var(--blue-deep);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1.4rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+.btn-outline-white {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1.4rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline-white:hover { background: rgba(255,255,255,0.25); }
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.stat-icon.blue { background: var(--blue-pale); }
+.stat-icon.green { background: #d1fae5; }
+.stat-icon.orange { background: #fef3c7; }
+
+.stat-num { font-size: 1.4rem; font-weight: 800; color: var(--gray-900); }
+.stat-label { font-size: 0.75rem; color: var(--gray-400); font-weight: 500; margin-top: 0.1rem; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.feature-card {
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.feature-card:hover {
+  border-color: var(--blue-soft);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.feature-card .f-icon {
+  width: 52px; height: 52px;
+  background: var(--blue-pale);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 0.9rem;
+}
+
+.feature-card h3 { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.35rem; }
+.feature-card p { font-size: 0.75rem; color: var(--gray-400); line-height: 1.5; }
+
+/* ── SCAN SOAL ── */
+.scan-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.upload-zone {
+  border: 2.5px dashed var(--blue-light);
+  border-radius: var(--radius);
+  background: var(--blue-pale);
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.upload-zone:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+.upload-zone.drag-over { border-color: var(--blue-deep); background: var(--blue-light); transform: scale(1.01); }
+
+.upload-zone input[type=file] { display: none; }
+
+.upload-icon {
+  width: 64px; height: 64px;
+  background: var(--blue-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 1rem;
+}
+
+.upload-zone h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--blue-deep); }
+.upload-zone p { font-size: 0.8rem; color: var(--gray-400); line-height: 1.5; margin-bottom: 1.25rem; }
+
+.btn-blue {
+  background: var(--blue-mid);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1.5rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-blue:hover { background: var(--blue-deep); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-blue:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.preview-img {
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  margin-top: 1rem;
+  border: 1px solid var(--gray-200);
+  display: none;
+}
+
+.scan-result {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.scan-result h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+
+.answer-area {
+  flex: 1;
+  background: var(--gray-100);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--gray-600);
+  min-height: 300px;
+  overflow-y: auto;
+}
+
+.answer-area.has-content { background: var(--white); border: 1px solid var(--blue-light); color: var(--gray-900); }
+
+.placeholder-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 0.75rem;
+  color: var(--gray-400);
+  text-align: center;
+}
+
+.placeholder-state .p-icon { font-size: 2.5rem; }
+.placeholder-state p { font-size: 0.8rem; line-height: 1.5; }
+
+/* ── CHAT ── */
+.chat-layout {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 140px);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.chat-header-bar {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(to right, var(--blue-pale), var(--white));
+}
+
+.chat-av {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--blue-mid), var(--blue-soft));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.chat-header-bar h3 { font-size: 0.95rem; font-weight: 700; }
+.chat-header-bar p { font-size: 0.72rem; color: var(--gray-400); }
+
+.online-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; margin-left: auto; box-shadow: 0 0 0 2px #d1fae5; }
+
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--gray-100);
+}
+
+.messages-area::-webkit-scrollbar { width: 4px; }
+.messages-area::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
+
+.msg { display: flex; gap: 0.75rem; max-width: 80%; animation: fadeUp 0.25s ease; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+
+.msg-av {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.msg.ai .msg-av { background: linear-gradient(135deg, var(--blue-mid), var(--blue-soft)); }
+.msg.user .msg-av { background: var(--gray-900); color: white; font-size: 0.65rem; font-weight: 700; }
+
+.bubble {
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.msg.ai .bubble {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 2px 14px 14px 14px;
+  color: var(--gray-900);
+  box-shadow: var(--shadow-sm);
+}
+
+.msg.user .bubble {
+  background: linear-gradient(135deg, var(--blue-mid), var(--blue-deep));
+  color: white;
+  border-radius: 14px 2px 14px 14px;
+}
+
+.bubble strong { font-weight: 700; }
+.bubble ul { padding-left: 1.2rem; margin: 0.4rem 0; }
+.bubble li { margin-bottom: 0.2rem; }
+.bubble code { background: var(--blue-pale); padding: 0.1rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; color: var(--blue-deep); }
+
+.chips-row {
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--gray-200);
+  background: var(--white);
+}
+
+.chip {
+  background: var(--blue-pale);
+  color: var(--blue-deep);
+  border: 1px solid var(--blue-light);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chip:hover { background: var(--blue-light); border-color: var(--blue-soft); }
+
+.chat-input-bar {
+  padding: 1rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  background: var(--white);
+  border-top: 1px solid var(--gray-200);
+  align-items: flex-end;
+}
+
+.chat-input {
+  flex: 1;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 1rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  outline: none;
+  resize: none;
+  background: var(--gray-100);
+  transition: all 0.2s;
+  max-height: 120px;
+  line-height: 1.5;
+}
+
+.chat-input:focus { border-color: var(--blue-soft); background: var(--white); box-shadow: 0 0 0 3px var(--blue-pale); }
+
+.send-btn {
+  width: 42px; height: 42px;
+  background: var(--blue-mid);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.send-btn:hover { background: var(--blue-deep); transform: scale(1.05); }
+.send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── KALKULATOR ── */
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+.calc-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: box-shadow 0.2s;
+}
+
+.calc-card:hover { box-shadow: var(--shadow-md); }
+
+.calc-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.calc-ic {
+  width: 40px; height: 40px;
+  background: var(--blue-pale);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+
+.calc-card-header h3 { font-size: 0.95rem; font-weight: 700; }
+.calc-card-header p { font-size: 0.72rem; color: var(--gray-400); margin-top: 0.1rem; }
+
+.inp-group { margin-bottom: 0.85rem; }
+.inp-group label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 0.35rem;
+}
+
+.inp-group input {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  outline: none;
+  background: var(--gray-100);
+  transition: all 0.15s;
+}
+
+.inp-group input:focus { border-color: var(--blue-soft); background: white; box-shadow: 0 0 0 3px var(--blue-pale); }
+
+.calc-result-box {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, var(--blue-pale), #e0f2fe);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--blue-light);
+  display: none;
+}
+
+.calc-result-box.show { display: block; animation: fadeUp 0.2s ease; }
+.result-lbl { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--blue-mid); margin-bottom: 0.25rem; }
+.result-val { font-family: 'Instrument Serif', serif; font-size: 1.6rem; color: var(--blue-deep); font-weight: 400; }
+.result-sub { font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem; line-height: 1.6; }
+
+/* ── MATERI ── */
+.materi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.materi-card {
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.materi-card:hover { border-color: var(--blue-soft); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.materi-card .m-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+.materi-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; }
+.materi-card p { font-size: 0.775rem; color: var(--gray-400); line-height: 1.5; }
+
+.badge {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  background: var(--blue-pale);
+  color: var(--blue-mid);
+  letter-spacing: 0.3px;
+}
+
+.materi-detail-view { display: none; }
+.materi-detail-view.show { display: block; animation: fadeUp 0.25s ease; }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--blue-mid);
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  background: none;
+  border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 0;
+}
+
+.back-link:hover { color: var(--blue-deep); }
+
+.detail-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+
+.detail-card h2 { font-family: 'Instrument Serif', serif; font-size: 1.6rem; margin-bottom: 0.5rem; }
+.detail-card .sub { font-size: 0.85rem; color: var(--gray-400); margin-bottom: 1.5rem; }
+
+.formula-block {
+  background: var(--gray-900);
+  color: #7dd3fc;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-sm);
+  margin: 1.25rem 0;
+  line-height: 2;
+  overflow-x: auto;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.info-tile {
+  background: var(--blue-pale);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.25rem;
+  border-left: 3px solid var(--blue-soft);
+}
+
+.info-tile h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--blue-mid); margin-bottom: 0.4rem; }
+.info-tile p { font-size: 0.82rem; line-height: 1.6; color: var(--gray-600); }
+
+/* ── TYPING ── */
+.typing-dots { display: flex; gap: 4px; padding: 4px 0; }
+.dot { width: 7px; height: 7px; background: var(--blue-soft); border-radius: 50%; animation: blink 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,60%,100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
+
+/* ── MOBILE ── */
+.hamburger { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; }
+.overlay { display: none; }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+  .content { margin-left: 0; }
+  .hamburger { display: block; }
+  .overlay { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 45; display: none; }
+  .overlay.show { display: block; }
+  .scan-wrapper { grid-template-columns: 1fr; }
+  .calc-grid { grid-template-columns: 1fr; }
+  .hero-banner h1 { font-size: 1.6rem; }
+  .stats-row { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: 1fr; }
+  .page-body { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">📘</div>
+        <div>
+          <div class="logo-text">Study<span>Ekon</span></div>
+          <div class="logo-sub">Asisten Mahasiswa Ekonomi</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-label">Menu Utama</div>
+      <button class="nav-item active" onclick="showPage('home')">
+        <span class="nav-icon">🏠</span> Beranda
+      </button>
+      <button class="nav-item" onclick="showPage('scan')">
+        <span class="nav-icon">📷</span> Scan Soal
+      </button>
+      <button class="nav-item" onclick="showPage('chat')">
+        <span class="nav-icon">💬</span> Tanya AI
+      </button>
+
+      <div class="nav-label">Tools</div>
+      <button class="nav-item" onclick="showPage('kalkulator')">
+        <span class="nav-icon">🧮</span> Kalkulator
+      </button>
+      <button class="nav-item" onclick="showPage('materi')">
+        <span class="nav-icon">📚</span> Materi
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Dibuat untuk mahasiswa<br>Ekonomi & Bisnis Indonesia 🇮🇩
+    </div>
+  </aside>
+
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- ═══ CONTENT ═══ -->
+  <div class="content">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="topbar-title">Beranda</div>
+      </div>
+      <div class="topbar-badge">✦ AI Powered</div>
+    </header>
+
+    <div class="page-body">
+
+      <!-- ═══ HOME ═══ -->
+      <div id="page-home" class="page active">
+        <div class="hero-banner">
+          <div class="hero-tag">✦ Platform Belajar #1 Mahasiswa Ekonomi</div>
+          <h1>Belajar Lebih Cerdas,<br>Nilai Lebih Tinggi</h1>
+          <p>Foto soal langsung dapat jawaban, tanya AI kapan saja, kalkulator bisnis lengkap — semua gratis untuk kamu.</p>
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="showPage('scan')">📷 Scan Soal Sekarang</button>
+            <button class="btn-outline-white" onclick="showPage('chat')">💬 Tanya AI</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon blue">📷</div>
+            <div><div class="stat-num">Scan</div><div class="stat-label">Foto soal → jawaban otomatis</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">🧮</div>
+            <div><div class="stat-num">5 Kalkulasi</div><div class="stat-label">HPP, BEP, ROI, NPV, Laba/Rugi</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange">📚</div>
+            <div><div class="stat-num">6 Materi</div><div class="stat-label">Lengkap dengan rumus & contoh</div></div>
+          </div>
+        </div>
+
+        <div class="section-header"><h2>Fitur Unggulan</h2></div>
+        <div class="feature-grid">
+          <div class="feature-card" onclick="showPage('scan')">
+            <div class="f-icon">📷</div>
+            <h3>Scan Soal</h3>
+            <p>Foto soal ujian atau tugas, AI langsung analisis dan beri jawaban rinci</p>
+          </div>
+          <div class="feature-card" onclick="showPage('chat')">
+            <div class="f-icon">🤖</div>
+            <h3>Tanya AI</h3>
+            <p>Chat 24/7 dengan AI tentang akuntansi, ekonomi, dan bisnis</p>
+          </div>
+          <div class="feature-card" onclick="showPage('kalkulator')">
+            <div class="f-icon">🧮</div>
+            <h3>Kalkulator Bisnis</h3>
+            <p>Hitung HPP, BEP, ROI, NPV otomatis dengan langkah-langkah jelas</p>
+          </div>
+          <div class="feature-card" onclick="showPage('materi')">
+            <div class="f-icon">📖</div>
+            <h3>Materi Ringkas</h3>
+            <p>Rangkuman materi kuliah dengan rumus dan contoh penerapan</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ SCAN SOAL ═══ -->
+      <div id="page-scan" class="page">
+        <div style="margin-bottom:1.25rem">
+          <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:0.25rem">📷 Scan Soal</h2>
+          <p style="font-size:0.82rem;color:var(--gray-400)">Upload foto soal ujian atau tugas — AI akan menganalisis dan memberikan jawaban lengkap beserta cara penyelesaiannya.</p>
+        </div>
+        <div class="scan-wrapper">
+          <!-- Upload -->
+          <div>
+            <div class="upload-zone" id="uploadZone"
+              onclick="document.getElementById('fileInput').click()"
+              ondragover="event.preventDefault();this.classList.add('drag-over')"
+              ondragleave="this.classList.remove('drag-over')"
+              ondrop="handleDrop(event)">
+              <input type="file" id="fileInput" accept="image/*" onchange="handleFile(this.files[0])">
+              <div class="upload-icon">📸</div>
+              <h3>Upload Foto Soal</h3>
+              <p>Drag & drop foto ke sini, atau klik untuk pilih file.<br>Mendukung JPG, PNG, WEBP</p>
+              <button class="btn-blue" onclick="event.stopPropagation();document.getElementById('fileInput').click()">
+                📁 Pilih Foto
+              </button>
+              <img id="previewImg" class="preview-img" alt="Preview">
+            </div>
+            <button class="btn-blue" id="analyzeBtn" style="width:100%;margin-top:1rem;display:none" onclick="analyzeImage()">
+              🔍 Analisis & Jawab Soal
+            </button>
+          </div>
+
+          <!-- Result -->
+          <div class="scan-result">
+            <h3>📝 Jawaban & Pembahasan</h3>
+            <div class="answer-area" id="answerArea">
+              <div class="placeholder-state">
+                <div class="p-icon">🔍</div>
+                <p>Upload foto soal terlebih dahulu,<br>lalu klik <strong>Analisis & Jawab Soal</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ CHAT ═══ -->
+      <div id="page-chat" class="page">
+        <div class="chat-layout">
+          <div class="chat-header-bar">
+            <div class="chat-av">🤖</div>
+            <div>
+              <h3>EkoBis AI Assistant</h3>
+              <p>Asisten Ekonomi & Bisnis · Selalu siap membantu</p>
+            </div>
+            <div class="online-dot"></div>
+          </div>
+
+          <div class="messages-area" id="chatMessages">
+            <div class="msg ai">
+              <div class="msg-av">🤖</div>
+              <div class="bubble">
+                Halo! Saya <strong>EkoBis AI</strong> 👋<br><br>
+                Tanya apa saja tentang <strong>akuntansi, manajemen keuangan, ekonomi mikro/makro, pemasaran, statistika bisnis</strong>, atau minta saya bantu hitung soal. Saya siap membantu!
+              </div>
+            </div>
+          </div>
+
+          <div class="chips-row">
+            <button class="chip" onclick="sendChip('Apa itu jurnal penyesuaian dan contohnya?')">Jurnal Penyesuaian</button>
+            <button class="chip" onclick="sendChip('Jelaskan cara menghitung BEP dengan contoh')">Cara hitung BEP</button>
+            <button class="chip" onclick="sendChip('Apa perbedaan inflasi dan deflasi?')">Inflasi vs Deflasi</button>
+            <button class="chip" onclick="sendChip('Jelaskan konsep 4P dalam pemasaran beserta contoh')">4P Marketing</button>
+            <button class="chip" onclick="sendChip('Bagaimana cara membuat laporan laba rugi?')">Laporan L/R</button>
+          </div>
+
+          <div class="chat-input-bar">
+            <textarea class="chat-input" id="chatInput" rows="1" placeholder="Ketik pertanyaan tentang ekonomi & bisnis..." onkeydown="handleEnter(event)" oninput="autoResize(this)"></textarea>
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ KALKULATOR ═══ -->
+      <div id="page-kalkulator" class="page">
+        <div style="margin-bottom:1.25rem">
+          <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:0.25rem">🧮 Kalkulator Bisnis</h2>
+          <p style="font-size:0.82rem;color:var(--gray-400)">Hitung otomatis dengan langkah-langkah yang jelas dan mudah dipahami.</p>
+        </div>
+        <div class="calc-grid">
+
+          <!-- HPP -->
+          <div class="calc-card">
+            <div class="calc-card-header">
+              <div class="calc-ic">📦</div>
+              <div><h3>Harga Pokok Penjualan</h3><p>HPP = Pers. Awal + Pembelian − Pers. Akhir</p></div>
+            </div>
+            <div class="inp-group"><label>Persediaan Awal (Rp)</label><input type="number" id="h-a" placeholder="Contoh: 320000000"></div>
+            <div class="inp-group"><label>Pembelian Bersih (Rp)</label><input type="number" id="h-b" placeholder="Contoh: 390000000"></div>
+            <div class="inp-group"><label>Persediaan Akhir (Rp)</label><input type="number" id="h-c" placeholder="Contoh: 415000000"></div>
+            <button class="btn-blue" style="width:100%" onclick="hitHPP()">Hitung HPP</button>
+            <div class="calc-result-box" id="r-hpp">
+              <div class="result-lbl">Harga Pokok Penjualan</div>
+              <div class="result-val" id="rv-hpp"></div>
+              <div class="result-sub" id="rs-hpp"></div>
+            </div>
+          </div>
+
+          <!-- BEP -->
+          <div class="calc-card">
+            <div class="calc-card-header">
+              <div class="calc-ic">⚖️</div>
+              <div><h3>Break Even Point</h3><p>BEP = Biaya Tetap ÷ (Harga − Biaya Variabel)</p></div>
+            </div>
+            <div class="inp-group"><label>Biaya Tetap Total (Rp)</label><input type="number" id="b-fc" placeholder="Contoh: 50000000"></div>
+            <div class="inp-group"><label>Harga Jual per Unit (Rp)</label><input type="number" id="b-p" placeholder="Contoh: 150000"></div>
+            <div class="inp-group"><label>Biaya Variabel per Unit (Rp)</label><input type="number" id="b-vc" placeholder="Contoh: 80000"></div>
+            <button class="btn-blue" style="width:100%" onclick="hitBEP()">Hitung BEP</button>
+            <div class="calc-result-box" id="r-bep">
+              <div class="result-lbl">Break Even Point</div>
+              <div class="result-val" id="rv-bep"></div>
+              <div class="result-sub" id="rs-bep"></div>
+            </div>
+          </div>
+
+          <!-- ROI -->
+          <div class="calc-card">
+            <div class="calc-card-header">
+              <div class="calc-ic">📈</div>
+              <div><h3>Return on Investment</h3><p>ROI = (Laba Bersih ÷ Investasi) × 100%</p></div>
+            </div>
+            <div class="inp-group"><label>Laba Bersih (Rp)</label><input type="number" id="r-lb" placeholder="Contoh: 120000000"></div>
+            <div class="inp-group"><label>Total Investasi (Rp)</label><input type="number" id="r-iv" placeholder="Contoh: 500000000"></div>
+            <button class="btn-blue" style="width:100%" onclick="hitROI()">Hitung ROI</button>
+            <div class="calc-result-box" id="r-roi">
+              <div class="result-lbl">Return on Investment</div>
+              <div class="result-val" id="rv-roi"></div>
+              <div class="result-sub" id="rs-roi"></div>
+            </div>
+          </div>
+
+          <!-- NPV -->
+          <div class="calc-card">
+            <div class="calc-card-header">
+              <div class="calc-ic">💰</div>
+              <div><h3>Net Present Value</h3><p>NPV = Σ[CF/(1+r)^t] − Investasi Awal</p></div>
+            </div>
+            <div class="inp-group"><label>Investasi Awal (Rp)</label><input type="number" id="n-i" placeholder="Contoh: 200000000"></div>
+            <div class="inp-group"><label>Arus Kas per Tahun (Rp)</label><input type="number" id="n-cf" placeholder="Contoh: 60000000"></div>
+            <div class="inp-group"><label>Tingkat Diskonto (%)</label><input type="number" id="n-r" placeholder="Contoh: 10"></div>
+            <div class="inp-group"><label>Jumlah Tahun</label><input type="number" id="n-t" placeholder="Contoh: 5"></div>
+            <button class="btn-blue" style="width:100%" onclick="hitNPV()">Hitung NPV</button>
+            <div class="calc-result-box" id="r-npv">
+              <div class="result-lbl">Net Present Value</div>
+              <div class="result-val" id="rv-npv"></div>
+              <div class="result-sub" id="rs-npv"></div>
+            </div>
+          </div>
+
+          <!-- LABA RUGI -->
+          <div class="calc-card" style="grid-column: 1 / -1;">
+            <div class="calc-card-header">
+              <div class="calc-ic">📊</div>
+              <div><h3>Ringkasan Laba / Rugi</h3><p>Laba Bersih = Penjualan − HPP − Beban Operasional</p></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+              <div class="inp-group"><label>Total Penjualan (Rp)</label><input type="number" id="lr-j" placeholder="Contoh: 610000000"></div>
+              <div class="inp-group"><label>HPP (Rp)</label><input type="number" id="lr-h" placeholder="Contoh: 295000000"></div>
+              <div class="inp-group"><label>Total Beban Operasional (Rp)</label><input type="number" id="lr-b" placeholder="Contoh: 74500000"></div>
+            </div>
+            <button class="btn-blue" style="width:100%" onclick="hitLaba()">Hitung Laba / Rugi</button>
+            <div class="calc-result-box" id="r-lr">
+              <div class="result-lbl">Laba / Rugi Bersih</div>
+              <div class="result-val" id="rv-lr"></div>
+              <div class="result-sub" id="rs-lr"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══ MATERI ═══ -->
+      <div id="page-materi" class="page">
+        <div id="materi-list-view">
+          <div style="margin-bottom:1.25rem">
+            <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:0.25rem">📚 Materi Kuliah</h2>
+            <p style="font-size:0.82rem;color:var(--gray-400)">Klik materi untuk membaca ringkasan lengkap beserta rumus dan penjelasan.</p>
+          </div>
+          <div class="materi-grid">
+            <div class="materi-card" onclick="openMateri('akuntansi')">
+              <div class="m-icon">📒</div>
+              <h3>Akuntansi Dasar</h3>
+              <p>Siklus akuntansi, jurnal, neraca saldo, AJP hingga laporan keuangan</p>
+              <span class="badge">Akuntansi</span>
+            </div>
+            <div class="materi-card" onclick="openMateri('manajemen')">
+              <div class="m-icon">📊</div>
+              <h3>Manajemen Keuangan</h3>
+              <p>NPV, IRR, ROI, BEP, analisis rasio keuangan perusahaan</p>
+              <span class="badge">Keuangan</span>
+            </div>
+            <div class="materi-card" onclick="openMateri('ekonomi')">
+              <div class="m-icon">📈</div>
+              <h3>Ekonomi Mikro & Makro</h3>
+              <p>Supply-demand, elastisitas, inflasi, GDP, kebijakan moneter & fiskal</p>
+              <span class="badge">Ekonomi</span>
+            </div>
+            <div class="materi-card" onclick="openMateri('pemasaran')">
+              <div class="m-icon">🎯</div>
+              <h3>Manajemen Pemasaran</h3>
+              <p>4P, STP, product life cycle, brand management, CRM</p>
+              <span class="badge">Bisnis</span>
+            </div>
+            <div class="materi-card" onclick="openMateri('statistik')">
+              <div class="m-icon">📉</div>
+              <h3>Statistika Bisnis</h3>
+              <p>Mean, median, distribusi normal, regresi, uji hipotesis</p>
+              <span class="badge">Analitik</span>
+            </div>
+            <div class="materi-card" onclick="openMateri('sdm')">
+              <div class="m-icon">👥</div>
+              <h3>Manajemen SDM</h3>
+              <p>Rekrutmen, motivasi, penilaian kinerja, pengembangan organisasi</p>
+              <span class="badge">SDM</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="materi-detail-view" class="materi-detail-view">
+          <button class="back-link" onclick="closeMateri()">← Kembali ke Materi</button>
+          <div id="materi-content" class="detail-card"></div>
+        </div>
+      </div>
+
+    </div><!-- end page-body -->
+  </div><!-- end content -->
+</div><!-- end app -->
+
+<script>
+// ═══════════ NAVIGATION ═══════════
+const titles = { home:'Beranda', scan:'Scan Soal', chat:'Tanya AI', kalkulator:'Kalkulator Bisnis', materi:'Materi Kuliah' };
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  const items = document.querySelectorAll('.nav-item');
+  const map = ['home','scan','chat','kalkulator','materi'];
+  items.forEach((b,i) => { if(map[i] === name) b.classList.add('active'); });
+  document.getElementById('topbar-title').textContent = titles[name] || name;
+  closeSidebar();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// ═══════════ SCAN SOAL ═══════════
+let currentImageBase64 = null;
+let currentImageType = null;
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleFile(file);
+}
+
+function handleFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const result = e.target.result;
+    currentImageBase64 = result.split(',')[1];
+    currentImageType = file.type;
+    const img = document.getElementById('previewImg');
+    img.src = result;
+    img.style.display = 'block';
+    document.getElementById('analyzeBtn').style.display = 'flex';
+    document.getElementById('answerArea').innerHTML = `<div class="placeholder-state"><div class="p-icon">✅</div><p>Foto berhasil diupload!<br>Klik <strong>Analisis & Jawab Soal</strong> untuk memulai</p></div>`;
+    document.getElementById('answerArea').classList.remove('has-content');
+  };
+  reader.readAsDataURL(file);
+}
+
+async function analyzeImage() {
+  if (!currentImageBase64) return;
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Menganalisis soal...';
+  const area = document.getElementById('answerArea');
+  area.classList.remove('has-content');
+  area.innerHTML = `<div class="placeholder-state"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><p>AI sedang membaca dan menganalisis soal...</p></div>`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `Kamu adalah tutor ekonomi & bisnis untuk mahasiswa Indonesia. Tugasmu adalah menganalisis soal dari gambar dan memberikan jawaban yang lengkap, rinci, dan mudah dipahami dalam Bahasa Indonesia.
+
+Format jawabanmu:
+1. **Identifikasi Soal**: Sebutkan jenis soal dan topiknya
+2. **Konsep Kunci**: Jelaskan konsep/rumus yang relevan
+3. **Langkah Penyelesaian**: Jabarkan langkah demi langkah secara rinci
+4. **Jawaban Akhir**: Berikan jawaban final yang jelas
+5. **Tips**: Berikan tips atau catatan penting agar mahasiswa memahami materi
+
+Gunakan bahasa yang ramah, jelas, dan mudah dipahami mahasiswa. Tampilkan perhitungan secara detail.`,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: currentImageType, data: currentImageBase64 } },
+            { type: 'text', text: 'Tolong analisis soal dalam gambar ini dan berikan jawaban lengkap beserta cara penyelesaiannya secara rinci.' }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    const answer = data.content?.[0]?.text || 'Maaf, tidak bisa menganalisis gambar ini.';
+    area.classList.add('has-content');
+    area.innerHTML = formatAnswer(answer);
+  } catch(e) {
+    area.innerHTML = `<div class="placeholder-state"><div class="p-icon">⚠️</div><p>Terjadi kesalahan koneksi.<br>Silakan coba lagi.</p></div>`;
+  }
+  btn.disabled = false;
+  btn.innerHTML = '🔍 Analisis & Jawab Soal';
+}
+
+function formatAnswer(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>')
+    .replace(/^(\d+\.\s)/gm, '<br>$1');
+}
+
+// ═══════════ CHAT ═══════════
+let isLoading = false;
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function addMsg(role, html) {
+  const wrap = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML = `<div class="msg-av">${role === 'ai' ? '🤖' : 'Sy'}</div><div class="bubble">${html}</div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function showTyping() {
+  const wrap = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ai'; div.id = 'typing-msg';
+  div.innerHTML = `<div class="msg-av">🤖</div><div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function removeTyping() { document.getElementById('typing-msg')?.remove(); }
+
+function fmtMsg(t) {
+  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+          .replace(/`(.*?)`/g,'<code>$1</code>')
+          .replace(/\n/g,'<br>');
+}
+
+async function sendMessage() {
+  const inp = document.getElementById('chatInput');
+  const text = inp.value.trim();
+  if (!text || isLoading) return;
+  inp.value = ''; inp.style.height = 'auto';
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  addMsg('user', text);
+  showTyping();
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'Kamu adalah EkoBis AI, asisten belajar cerdas untuk mahasiswa Ekonomi & Bisnis Indonesia. Jawab dengan bahasa Indonesia yang ramah, jelas, dan mudah dipahami. Gunakan contoh nyata, tampilkan rumus jika relevan, dan jelaskan langkah demi langkah untuk soal hitungan. Fokus topik: akuntansi, manajemen keuangan, ekonomi mikro/makro, pemasaran, statistika bisnis, dan SDM. Gunakan **bold** untuk istilah penting.',
+        messages: [{ role: 'user', content: text }]
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    addMsg('ai', fmtMsg(data.content?.[0]?.text || 'Maaf, tidak dapat memproses pertanyaan ini.'));
+  } catch(e) {
+    removeTyping();
+    addMsg('ai', 'Maaf, terjadi kesalahan koneksi. Silakan coba lagi ya 🙏');
+  }
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+function sendChip(t) { document.getElementById('chatInput').value = t; sendMessage(); }
+function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+
+// ═══════════ KALKULATOR ═══════════
+const fmt = n => 'Rp ' + Math.round(Math.abs(n)).toLocaleString('id-ID');
+
+function showResult(id, val, sub) {
+  const box = document.getElementById('r-' + id);
+  document.getElementById('rv-' + id).innerHTML = val;
+  document.getElementById('rs-' + id).innerHTML = sub;
+  box.classList.add('show');
+}
+
+function hitHPP() {
+  const a = +document.getElementById('h-a').value||0, b = +document.getElementById('h-b').value||0, c = +document.getElementById('h-c').value||0;
+  const hpp = a + b - c;
+  showResult('hpp', fmt(hpp),
+    `Persediaan Awal: ${fmt(a)}<br>+ Pembelian: ${fmt(b)}<br>= Barang Tersedia: ${fmt(a+b)}<br>− Persediaan Akhir: ${fmt(c)}<br><strong>= HPP: ${fmt(hpp)}</strong>`);
+}
+
+function hitBEP() {
+  const fc = +document.getElementById('b-fc').value||0, p = +document.getElementById('b-p').value||0, vc = +document.getElementById('b-vc').value||0;
+  if (p <= vc) { alert('Harga jual harus lebih besar dari biaya variabel!'); return; }
+  const cm = p - vc, unit = fc / cm, rp = unit * p;
+  showResult('bep', Math.ceil(unit).toLocaleString('id-ID') + ' Unit',
+    `Contribution Margin/Unit: ${fmt(cm)}<br>BEP Unit: ${Math.ceil(unit).toLocaleString('id-ID')} unit<br>BEP Rupiah: ${fmt(rp)}<br><em>💡 Di atas titik ini perusahaan mulai meraih laba</em>`);
+}
+
+function hitROI() {
+  const lb = +document.getElementById('r-lb').value||0, iv = +document.getElementById('r-iv').value||0;
+  if (!iv) { alert('Masukkan nilai investasi!'); return; }
+  const roi = (lb/iv)*100;
+  showResult('roi', roi.toFixed(2) + '%',
+    `Laba Bersih: ${fmt(lb)}<br>Total Investasi: ${fmt(iv)}<br><strong>ROI: ${roi.toFixed(2)}%</strong><br><em>${roi > 0 ? '✅ Investasi menguntungkan' : '⚠️ Investasi merugi'}</em>`);
+}
+
+function hitNPV() {
+  const C0 = +document.getElementById('n-i').value||0, CF = +document.getElementById('n-cf').value||0;
+  const r = (+document.getElementById('n-r').value||10)/100, n = +document.getElementById('n-t').value||5;
+  let pv = 0;
+  for (let t=1;t<=n;t++) pv += CF/Math.pow(1+r,t);
+  const npv = pv - C0;
+  showResult('npv', fmt(npv),
+    `Total PV Arus Kas: ${fmt(pv)}<br>Investasi Awal: ${fmt(C0)}<br><strong>NPV: ${fmt(npv)}</strong><br><em>${npv > 0 ? '✅ Proyek layak (NPV > 0)' : '❌ Proyek tidak layak (NPV < 0)'}</em>`);
+}
+
+function hitLaba() {
+  const j = +document.getElementById('lr-j').value||0, h = +document.getElementById('lr-h').value||0, b = +document.getElementById('lr-b').value||0;
+  const lk = j-h, lb = lk-b, margin = j ? ((lb/j)*100).toFixed(1) : 0;
+  const box = document.getElementById('r-lr');
+  box.style.background = lb >= 0 ? 'linear-gradient(135deg,#dbeafe,#e0f2fe)' : 'linear-gradient(135deg,#fee2e2,#fef2f2)';
+  box.style.borderColor = lb >= 0 ? 'var(--blue-light)' : '#fca5a5';
+  document.getElementById('rv-lr').style.color = lb >= 0 ? 'var(--blue-deep)' : 'var(--danger)';
+  showResult('lr', fmt(lb),
+    `Penjualan: ${fmt(j)}<br>− HPP: ${fmt(h)}<br>= Laba Kotor: ${fmt(lk)}<br>− Beban Operasional: ${fmt(b)}<br><strong>= Laba Bersih: ${fmt(lb)}</strong><br>Net Profit Margin: <strong>${margin}%</strong>`);
+}
+
+// ═══════════ MATERI ═══════════
+const materiDB = {
+  akuntansi: {
+    title:'📒 Akuntansi Dasar',
+    sub:'Siklus akuntansi lengkap dari transaksi hingga laporan keuangan',
+    formula:`PERSAMAAN DASAR AKUNTANSI:\n  Aset = Liabilitas + Ekuitas\n\nLABA BERSIH:\n  Pendapatan − Beban = Laba / Rugi\n\nHPP:\n  Persediaan Awal + Pembelian − Persediaan Akhir`,
+    tiles:[
+      {t:'Siklus Akuntansi',p:'Transaksi → Jurnal → Buku Besar → Neraca Saldo → AJP → NSD → Laporan Keuangan → Jurnal Penutup'},
+      {t:'Debit vs Kredit',p:'<strong>Debit:</strong> Aset, Beban, Dividen naik<br><strong>Kredit:</strong> Liabilitas, Ekuitas, Pendapatan naik'},
+      {t:'AJP (Ayat Jurnal Penyesuaian)',p:'Jurnal di akhir periode untuk menyesuaikan saldo akun agar mencerminkan kondisi sebenarnya sebelum laporan dibuat'},
+      {t:'NSD (Neraca Saldo Disesuaikan)',p:'Neraca saldo setelah ditambah AJP — menjadi dasar pembuatan semua laporan keuangan'}
+    ]
+  },
+  manajemen: {
+    title:'📊 Manajemen Keuangan',
+    sub:'Analisis keuangan, investasi, dan keputusan pendanaan perusahaan',
+    formula:`NPV = Σ [CF_t / (1+r)^t] − C₀\nROI = (Laba Bersih / Investasi) × 100%\nBEP = Biaya Tetap / (Harga − Biaya Variabel)\nCurrent Ratio = Aset Lancar / Liabilitas Lancar`,
+    tiles:[
+      {t:'Time Value of Money',p:'Uang saat ini lebih bernilai dari masa depan karena potensi investasi. Dasar dari NPV, IRR, dan annuitas'},
+      {t:'Analisis Rasio',p:'<strong>Likuiditas:</strong> Current Ratio<br><strong>Profitabilitas:</strong> ROE, ROA, Net Margin<br><strong>Solvabilitas:</strong> Debt-to-Equity'},
+      {t:'Keputusan Investasi',p:'NPV > 0 → Terima ✅<br>NPV < 0 → Tolak ❌<br>IRR > WACC → Layak<br>Payback Period: semakin pendek semakin baik'},
+      {t:'Struktur Modal',p:'Kombinasi optimal utang & ekuitas untuk memaksimalkan nilai perusahaan sambil meminimalkan biaya modal'}
+    ]
+  },
+  ekonomi: {
+    title:'📈 Ekonomi Mikro & Makro',
+    sub:'Dari permintaan-penawaran hingga kebijakan moneter dan fiskal',
+    formula:`GDP = C + I + G + (X − M)\nInflasi = [(IHK_t − IHK_{t-1}) / IHK_{t-1}] × 100%\nElastisitas Harga = %ΔQ / %ΔP\nMultiplier Fiskal = 1 / (1 − MPC)`,
+    tiles:[
+      {t:'Hukum Permintaan',p:'Harga naik → permintaan turun (hubungan negatif). Faktor geser kurva: pendapatan, selera, harga barang substitusi/komplementer'},
+      {t:'Hukum Penawaran',p:'Harga naik → penawaran naik (hubungan positif). Faktor geser: biaya produksi, teknologi, jumlah produsen'},
+      {t:'Kebijakan Moneter',p:'Dikelola Bank Indonesia: suku bunga acuan, GWM, operasi pasar terbuka. Ekspansif = turunkan suku bunga untuk dorong pertumbuhan'},
+      {t:'Kebijakan Fiskal',p:'Dikelola pemerintah via APBN: pajak dan belanja negara. Ekspansif = naikkan belanja/turunkan pajak untuk stimulus ekonomi'}
+    ]
+  },
+  pemasaran: {
+    title:'🎯 Manajemen Pemasaran',
+    sub:'Strategi pemasaran modern dari STP hingga brand management',
+    formula:`MARKETING MIX (4P):\n  Product · Price · Place · Promotion\n\nSTP Framework:\n  Segmentation → Targeting → Positioning\n\nCustomer Lifetime Value:\n  CLV = (Nilai Pembelian × Frekuensi) × Retensi`,
+    tiles:[
+      {t:'Segmentasi Pasar',p:'Demografis (usia/jenis kelamin), Geografis (wilayah), Psikografis (gaya hidup), Perilaku (frekuensi beli) — membagi pasar menjadi kelompok homogen'},
+      {t:'Strategi Harga',p:'Cost-plus, kompetitif, value-based, penetration (murah untuk kuasai pasar), skimming (mahal di awal untuk inovator)'},
+      {t:'Product Life Cycle',p:'Perkenalan → Pertumbuhan → Kedewasaan → Penurunan. Setiap tahap butuh strategi harga, promosi, dan distribusi berbeda'},
+      {t:'Brand Equity',p:'Ekuitas merek = Kesadaran + Asosiasi + Kualitas Persepsi + Loyalitas. Merek kuat = premium pricing + loyalitas tinggi'}
+    ]
+  },
+  statistik: {
+    title:'📉 Statistika Bisnis',
+    sub:'Analisis data, distribusi, regresi, dan pengambilan keputusan berbasis data',
+    formula:`Mean = Σx / n\nVariansi = Σ(x−x̄)² / n\nStandar Deviasi = √Variansi\nKorelasi Pearson r = Σ[(xi−x̄)(yi−ȳ)] / (n·σx·σy)\nRegresi: Y = a + bX`,
+    tiles:[
+      {t:'Ukuran Pemusatan',p:'<strong>Mean:</strong> rata-rata aritmatika<br><strong>Median:</strong> nilai tengah data terurut<br><strong>Modus:</strong> nilai paling sering muncul'},
+      {t:'Distribusi Normal',p:'Kurva lonceng simetris: 68% data dalam ±1σ, 95% dalam ±2σ, 99,7% dalam ±3σ dari mean (Aturan 68-95-99,7)'},
+      {t:'Regresi Linear',p:'Y = a + bX — memodelkan hubungan antar variabel. b = koefisien regresi (slope), a = intersep. R² menunjukkan kekuatan model'},
+      {t:'Uji Hipotesis',p:'H₀ = hipotesis nol, H₁ = hipotesis alternatif. Tolak H₀ jika p-value < α (0,05). T-test, Chi-square, ANOVA adalah metode umum'}
+    ]
+  },
+  sdm: {
+    title:'👥 Manajemen SDM',
+    sub:'Pengelolaan sumber daya manusia untuk mencapai tujuan organisasi',
+    formula:`Turnover Rate = (Karyawan Keluar / Rata-rata Karyawan) × 100%\nProduktivitas = Output / Input\nROI Training = (Manfaat − Biaya) / Biaya × 100%`,
+    tiles:[
+      {t:'Rekrutmen & Seleksi',p:'Job Analysis → Job Description → Job Specification → Sourcing → Seleksi (CV, tes, wawancara) → Onboarding'},
+      {t:'Teori Motivasi',p:'<strong>Maslow:</strong> Hierarki kebutuhan<br><strong>Herzberg:</strong> Hygiene & Motivator<br><strong>Vroom:</strong> Expectancy Theory<br><strong>McGregor:</strong> Teori X & Y'},
+      {t:'Penilaian Kinerja',p:'KPI (Key Performance Indicator), 360° Feedback, MBO (Management by Objectives), BSC (Balanced Scorecard)'},
+      {t:'Pengembangan SDM',p:'On-the-job training, off-the-job training, mentoring, coaching, job rotation, succession planning untuk organisasi berkelanjutan'}
+    ]
+  }
+};
+
+function openMateri(id) {
+  const m = materiDB[id];
+  document.getElementById('materi-list-view').style.display = 'none';
+  document.getElementById('materi-detail-view').classList.add('show');
+  document.getElementById('materi-content').innerHTML = `
+    <h2>${m.title}</h2>
+    <p class="sub">${m.sub}</p>
+    <div class="formula-block">${m.formula}</div>
+    <div class="info-grid">
+      ${m.tiles.map(t => `<div class="info-tile"><h4>${t.t}</h4><p>${t.p}</p></div>`).join('')}
+    </div>`;
+}
+
+function closeMateri() {
+  document.getElementById('materi-list-view').style.display = 'block';
+  document.getElementById('materi-detail-view').classList.remove('show');
+}
+</script>
+</body>
+</html>
